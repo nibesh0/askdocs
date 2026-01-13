@@ -30,7 +30,6 @@ async def query_documents(request: QueryRequest):
             top_k=TOP_K_RETRIEVE
         )
         
-        # Debug logging
         print(f"[DEBUG] Namespace: {request.namespace}")
         print(f"[DEBUG] Retrieved {len(retrieved_docs)} docs")
         sources = set(d.get('source', 'unknown') for d in retrieved_docs)
@@ -46,7 +45,6 @@ async def query_documents(request: QueryRequest):
         
         reranked_docs = await rerank_documents(request.query, retrieved_docs)
         
-        # Debug logging
         print(f"[DEBUG] Reranked {len(reranked_docs)} docs")
         sources = set(d.get('source', 'unknown') for d in reranked_docs)
         print(f"[DEBUG] Sources in reranked: {sources}")
