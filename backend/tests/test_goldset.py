@@ -6,7 +6,7 @@ import asyncio
 import httpx
 import time
 
-API_URL = "http://localhost:8000"
+API_URL = "https://askdocs.onrender.com"
 
 # Test document content (upload this first)
 TEST_DOCUMENT = """

@@ -9,8 +9,8 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_INDEX = os.getenv("PINECONE_INDEX", "mini-rag-index")
 PINECONE_HOST = os.getenv("PINECONE_HOST")
 
-GEMINI_MODEL = "gemini-2.5-flash"
-EMBEDDING_MODEL = "models/text-embedding-004"
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "models/text-embedding-004")
 
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 100
