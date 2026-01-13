@@ -1,0 +1,57 @@
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-rag-frontend
+  labels:
+    app: mini-rag
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mini-rag
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: mini-rag
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: mini-rag-frontend:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NEXT_PUBLIC_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: mini-rag-config
+              key: backend-url
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mini-rag-frontend-svc
+spec:
+  selector:
+    app: mini-rag
+    component: frontend
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer

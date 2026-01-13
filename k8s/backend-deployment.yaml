@@ -1,0 +1,73 @@
+# Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-rag-backend
+  labels:
+    app: mini-rag
+    component: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mini-rag
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: mini-rag
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: mini-rag-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mini-rag-secrets
+              key: gemini-api-key
+        - name: PINECONE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mini-rag-secrets
+              key: pinecone-api-key
+        - name: PINECONE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mini-rag-config
+              key: pinecone-host
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mini-rag-backend-svc
+spec:
+  selector:
+    app: mini-rag
+    component: backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP

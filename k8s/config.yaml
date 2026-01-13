@@ -1,0 +1,22 @@
+# ConfigMap for non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mini-rag-config
+data:
+  pinecone-host: "https://mini-rag-index-4ngvhcs.svc.aped-4627-b74a.pinecone.io"
+  backend-url: "http://mini-rag-backend-svc:8000"
+---
+# Secret template (apply with actual values)
+# kubectl create secret generic mini-rag-secrets \
+#   --from-literal=gemini-api-key=YOUR_KEY \
+#   --from-literal=pinecone-api-key=YOUR_KEY
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mini-rag-secrets
+type: Opaque
+data:
+  # Base64 encoded values (replace with actual)
+  gemini-api-key: REPLACE_WITH_BASE64_ENCODED_KEY
+  pinecone-api-key: REPLACE_WITH_BASE64_ENCODED_KEY
